@@ -1,10 +1,15 @@
 package com.minus21.mainapp.ui.main;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,15 +19,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.minus21.mainapp.R;
 
+import java.io.InputStream;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment2 extends Fragment {
+    private static final int REQUEST_CODE = 0;
+    private ImageView imageView;
+
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-
-    //private PageViewModel pageViewModel;
-
     public static PlaceholderFragment2 newInstance(int index) {
         PlaceholderFragment2 fragment = new PlaceholderFragment2();
         Bundle bundle = new Bundle();
@@ -32,28 +39,44 @@ public class PlaceholderFragment2 extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // pageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
-        int index = 1;
-        if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
-        //pageViewModel.setIndex(index);
-    }
-
-    @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main2, container, false);
-/*        final TextView textView = root.findViewById(R.id.section_label);
-        pageViewModel.getText().observe(this, new Observer<String>() {
+        imageView = root.findViewById(R.id.i_am_image);
+
+        imageView.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent,REQUEST_CODE);
             }
-        });*/
+        });
+
+
         return root;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == getActivity().RESULT_OK) {
+                try {
+                    InputStream in = getActivity().getContentResolver().openInputStream(data.getData());
+
+                    Bitmap img = BitmapFactory.decodeStream(in);
+                    in.close();
+
+                    imageView.setImageBitmap(img);
+                } catch (Exception e) {
+
+                }
+            }
+            else if (resultCode == getActivity().RESULT_CANCELED) {
+                Toast.makeText(getActivity(),"사진 선택 취소",Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
