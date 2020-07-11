@@ -22,7 +22,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
-        mContext = context;
+        mContext = context;     // MainActivity context
     }
 
     @Override
@@ -40,7 +40,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
         return mContext.getResources().getString(TAB_TITLES[position]);
@@ -48,7 +47,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 2 total pages.
         return 3;
     }
 }
