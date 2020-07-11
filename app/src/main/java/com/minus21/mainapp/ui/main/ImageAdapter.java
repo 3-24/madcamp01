@@ -2,6 +2,7 @@ package com.minus21.mainapp.ui.main;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.TypedValue;
@@ -9,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,10 +65,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.CustomViewHo
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, int position) {
         String data = mList.get(position);
         try {
-
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(data));
             ImageView imageView = (ImageView) viewholder.imageView.findViewById(R.id.i_am_image);
             imageView.setImageBitmap(bitmap);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

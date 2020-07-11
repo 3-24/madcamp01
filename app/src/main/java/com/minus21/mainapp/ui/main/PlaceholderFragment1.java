@@ -92,8 +92,6 @@ public class PlaceholderFragment1 extends Fragment {
         if (clsCursor.moveToFirst()) {
             do {
                 String strContactId = clsCursor.getString(0);
-                Log.d("Unity", "연락처 사용자 ID : " + clsCursor.getString( 0 ));
-                Log.d("Unity", "연락처 사용자 이름 : " + clsCursor.getString( 1 ));
 
                 //phone number
                 Cursor clsPhoneCursor = contentResolver.query (
@@ -102,8 +100,6 @@ public class PlaceholderFragment1 extends Fragment {
                         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + strContactId,
                         null, null
                 );
-
-//                Log.d("Unity", "연락처 사용자 폰번호 : " + clsPhoneCursor.getString( 0 ));
 
                 clsPhoneCursor.moveToFirst();
                 ContactInfo contactInfo = new ContactInfo(clsCursor.getInt(clsCursor.getColumnIndex(ContactsContract.Contacts._ID)),
