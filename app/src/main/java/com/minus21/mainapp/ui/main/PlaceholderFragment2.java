@@ -2,6 +2,7 @@ package com.minus21.mainapp.ui.main;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -62,6 +63,7 @@ public class PlaceholderFragment2 extends Fragment {
     private Context context;
     private RecyclerView mRecyclerView;
     private GridLayoutManager mLayoutManager;
+    private ContentResolver contentResolver;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     public static PlaceholderFragment2 newInstance(int index) {
@@ -81,6 +83,11 @@ public class PlaceholderFragment2 extends Fragment {
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
+
+        mArrayList = new ArrayList<>();
+        mAdapter = new ImageAdapter(context,mArrayList);
+        checkSelfPermission();
+        contentResolver = context.getContentResolver();
     }
 
     @Override
@@ -101,12 +108,19 @@ public class PlaceholderFragment2 extends Fragment {
 
         mAdapter = new ImageAdapter(context,mArrayList);
         mRecyclerView.setAdapter(mAdapter);
+        updateData();
 
-        checkSelfPermission();
+        return root;
+    }
+
+    /* Update mArrayList and notify the change to the adapter */
+    private void updateData(){
+        mArrayList.clear();
 
         String[] projection = {
                 MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME};
-        Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+
+        Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null, "UPPER(" + MediaStore.Images.Media.DATE_TAKEN + ") ASC");
 
         if (cursor.moveToFirst()) {
@@ -114,20 +128,12 @@ public class PlaceholderFragment2 extends Fragment {
                 Uri ContentUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
                 mArrayList.add(String.valueOf(ContentUri));
                 mAdapter.notifyDataSetChanged();
-//                try {
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), ContentUri);
-//                    ImageView imageView = (ImageView) root.findViewById(R.id.i_am_image);
-//                    imageView.setImageBitmap(bitmap);
-//                    mArrayList.add(imageView);
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
             } while (cursor.moveToNext());
         }
         cursor.close();
 
-        return root;
+        /* Notify to the adapter */
+        mAdapter.notifyDataSetChanged();
     }
 
     // 권한에 대한 응답이 있을 때 작동하는 함수
@@ -165,22 +171,4 @@ public class PlaceholderFragment2 extends Fragment {
             Toast.makeText(getActivity(), "권한을 모두 허용", Toast.LENGTH_SHORT).show();
         }
     }
-
-//    @Override
-//    public void onActivityResult(int requestCode,int resultCode, @Nullable Intent data) {
-//        if (requestCode == 101 && resultCode == getActivity().RESULT_OK) {
-//            try {
-//                InputStream in = getActivity().getContentResolver().openInputStream(data.getData());
-//
-//                Bitmap bm = BitmapFactory.decodeStream(in);
-//                in.close();
-//                imageView.setImageBitmap(bm);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        else if (requestCode == 101 && resultCode == getActivity().RESULT_CANCELED) {
-//            Toast.makeText(getActivity(),"사진 선택 취소",Toast.LENGTH_SHORT).show();
-//        }
-//    }
 }
