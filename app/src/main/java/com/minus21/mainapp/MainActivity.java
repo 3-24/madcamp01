@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,5 +32,23 @@ public class MainActivity extends AppCompatActivity {
         /* Make and link TabLayout with viewPager */
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    protected void onStop() {
+        setResult(RESULT_OK);
+        super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        setResult(RESULT_OK);
+        super.onDestroy();
     }
 }

@@ -61,10 +61,6 @@ public class PlaceholderFragment1 extends Fragment {
                 }
             }
         });
-
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
-        }
         contentResolver = getActivity().getContentResolver();
     }
 

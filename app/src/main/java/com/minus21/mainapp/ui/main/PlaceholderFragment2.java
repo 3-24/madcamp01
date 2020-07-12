@@ -87,7 +87,6 @@ public class PlaceholderFragment2 extends Fragment {
 
         mArrayList = new ArrayList<>();
         mAdapter = new ImageAdapter(context,mArrayList);
-
         mAdapter.setOnItemClickListener(new CustomAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
@@ -102,8 +101,6 @@ public class PlaceholderFragment2 extends Fragment {
                 }
             }
         });
-
-        checkSelfPermission();
         contentResolver = context.getContentResolver();
     }
 
@@ -152,39 +149,4 @@ public class PlaceholderFragment2 extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    // 권한에 대한 응답이 있을 때 작동하는 함수
-//    @Override
-    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        // 권한을 허용한 경우
-        if (requestCode == 1) {
-            int length = permissions.length;
-            for (int i = 0; i < length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    // 동의
-                    Log.d("MainActivity", "권한 허용 : " + permissions[i]);
-                }
-            }
-        }
-    }
-
-    public void checkSelfPermission() {
-        String temp = "";
-        // 파일 읽기 권한 확인
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            temp += Manifest.permission.READ_EXTERNAL_STORAGE + " ";
-        }
-
-        // 파일 쓰기 권한 확인
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            temp += Manifest.permission.WRITE_EXTERNAL_STORAGE + " ";
-        }
-
-        if (TextUtils.isEmpty(temp) == false) {
-            // 권한 요청
-            ActivityCompat.requestPermissions(getActivity(), temp.trim().split(" "), 1);
-        } else {
-            // 모두 허용 상태
-            Toast.makeText(getActivity(), "권한을 모두 허용", Toast.LENGTH_SHORT).show();
-        }
-    }
 }
