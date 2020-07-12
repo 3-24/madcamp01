@@ -33,4 +33,22 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
     }
+
+    @Override
+    protected void onStop() {
+        setResult(RESULT_OK);
+        super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        setResult(RESULT_OK);
+        super.onDestroy();
+    }
 }
