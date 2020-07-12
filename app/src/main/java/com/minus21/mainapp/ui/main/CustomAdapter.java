@@ -19,6 +19,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     private ArrayList<ContactInfo> mList;
 
+    /* CustomViewHolder constructed with textViews */
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected TextView id;
         protected TextView name;
@@ -26,9 +27,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
         public CustomViewHolder(View view) {
             super(view);
-            this.id = (TextView) view.findViewById(R.id.list_id);
-            this.name = (TextView) view.findViewById(R.id.list_name);
-            this.phnumber = (TextView) view.findViewById(R.id.list_number);
+            this.id = view.findViewById(R.id.list_id);
+            this.name = view.findViewById(R.id.list_name);
+            this.phnumber = view.findViewById(R.id.list_number);
         }
     }
 
@@ -36,6 +37,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         this.mList = list;
     }
 
+    /* Called when RecyclerView needs a new RecyclerView.ViewHolder of the given type
+     * to represent an item. */
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
@@ -47,6 +50,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         return viewHolder;
     }
 
+    /* Called when notifyItemChanged */
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, int position) {
         ContactInfo data = mList.get(position);

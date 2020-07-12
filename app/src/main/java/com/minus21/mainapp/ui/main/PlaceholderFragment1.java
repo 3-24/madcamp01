@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.provider.ContactsContract;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -25,18 +26,15 @@ import com.minus21.mainapp.R;
 
 import java.util.ArrayList;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class PlaceholderFragment1 extends Fragment {
     private ArrayList<ContactInfo> mArrayList = new ArrayList<ContactInfo>();
     private CustomAdapter mAdapter;
-    private Context context;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-
+    private ContentResolver contentResolver;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+
     public static PlaceholderFragment1 newInstance(int index) {
         PlaceholderFragment1 fragment = new PlaceholderFragment1();
         Bundle bundle = new Bundle();
@@ -45,73 +43,82 @@ public class PlaceholderFragment1 extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mArrayList = new ArrayList<>();
+        mAdapter = new CustomAdapter(mArrayList);
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
+        }
+        contentResolver = getActivity().getContentResolver();
+    }
+
+
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main1, container, false);
 
-        mRecyclerView = (RecyclerView) root.findViewById(R.id.recyclerview_list);
-        mRecyclerView.setHasFixedSize(true);
-
+        /* Setup LinearLayout */
         mLayoutManager = new LinearLayoutManager(getActivity());
-
+        /* Init mRecyclerView */
+        mRecyclerView = root.findViewById(R.id.recyclerview_list);
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mArrayList = new ArrayList<>();
-
-        mAdapter = new CustomAdapter(mArrayList);
         mRecyclerView.setAdapter(mAdapter);
-
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+        updateData();
+        return root;
+    }
 
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
-
-        }
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                mLinearLayoutManager.getOrientation());
+    /* Update mArrayList and notify the change to the adapter */
+    private void updateData(){
+        mArrayList.clear();
         String [] arrProjection = {
                 ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.DISPLAY_NAME
+                ContactsContract.Contacts.DISPLAY_NAME,
         };
-        String [] arrPhoneProjection = {
-                ContactsContract.CommonDataKinds.Phone.NUMBER
-        };
-        String [] arrEmailProjection = {
-                ContactsContract.CommonDataKinds.Email.DATA
-        };
-        // get user list
-        ContentResolver contentResolver=getActivity().getContentResolver();
+
         Cursor clsCursor=contentResolver.query (
                 ContactsContract.Contacts.CONTENT_URI,
                 arrProjection,
                 ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1" ,
-                null, null
+                null,
+                "UPPER(" + ContactsContract.Contacts.DISPLAY_NAME + ") ASC"
         );
+
         if (clsCursor.moveToFirst()) {
             do {
-                String strContactId = clsCursor.getString(0);
-
-                //phone number
-                Cursor clsPhoneCursor = contentResolver.query (
+                /* Get phone number. This requires new cursor since phone number is
+                not located in ContactContract.Contacts */
+                String contactId = clsCursor.getString(0);
+                Cursor phoneCursor = contentResolver.query(
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        arrPhoneProjection,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + strContactId,
+                        null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
                         null, null
                 );
 
-                clsPhoneCursor.moveToFirst();
-                ContactInfo contactInfo = new ContactInfo(clsCursor.getInt(clsCursor.getColumnIndex(ContactsContract.Contacts._ID)),
-                        clsCursor.getString(clsCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),clsPhoneCursor.getString(clsPhoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                phoneCursor.moveToFirst();
+                String phone = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneCursor.close();
+
+                /* Make ContactInfo and update the array */
+                ContactInfo contactInfo = new ContactInfo(
+                        clsCursor.getInt(clsCursor.getColumnIndex(ContactsContract.Contacts._ID)),
+                        clsCursor.getString(clsCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),
+                        phone
+                );
                 mArrayList.add(contactInfo);
-                mAdapter.notifyDataSetChanged();
-                clsPhoneCursor.close();
-            }while (clsCursor.moveToNext());
+            } while (clsCursor.moveToNext());
         }
-        clsCursor.close( );
+        clsCursor.close();
 
-
-        return root;
+        /* Notify to the adapter */
+        mAdapter.notifyDataSetChanged();
     }
 }
