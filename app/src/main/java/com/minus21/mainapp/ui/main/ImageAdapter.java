@@ -36,11 +36,32 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.CustomViewHo
         this.position = position;
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(View v,int pos);
+    }
+
+    private CustomAdapter.OnItemClickListener mListener = null;
+
+    public void setOnItemClickListener(CustomAdapter.OnItemClickListener listener) {
+        this.mListener = listener;
+    }
+
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView imageView;
 
         public CustomViewHolder(View view) {
             super(view);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        mListener.onItemClick(v,pos);
+                    }
+                }
+            });
+
             this.imageView = (ImageView) view.findViewById(R.id.i_am_image);
         }
     }

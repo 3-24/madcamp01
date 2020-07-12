@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.provider.ContactsContract;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +50,17 @@ public class PlaceholderFragment1 extends Fragment {
 
         mArrayList = new ArrayList<>();
         mAdapter = new CustomAdapter(mArrayList);
+
+        mAdapter.setOnItemClickListener(new CustomAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int pos) {
+                switch (v.getId()) {
+                    case R.id.contact:
+
+                        break;
+                }
+            }
+        });
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
@@ -117,7 +129,6 @@ public class PlaceholderFragment1 extends Fragment {
             } while (clsCursor.moveToNext());
         }
         clsCursor.close();
-
         /* Notify to the adapter */
         mAdapter.notifyDataSetChanged();
     }

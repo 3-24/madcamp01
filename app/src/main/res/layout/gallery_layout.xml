@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/i_am_image"
+        android:clickable="true"
         android:layout_width="100dp"
         android:layout_height="90dp"
         android:gravity="center"

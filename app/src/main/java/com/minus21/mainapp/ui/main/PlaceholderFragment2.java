@@ -42,6 +42,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.minus21.mainapp.BuildConfig;
 import com.minus21.mainapp.R;
 
@@ -86,6 +87,22 @@ public class PlaceholderFragment2 extends Fragment {
 
         mArrayList = new ArrayList<>();
         mAdapter = new ImageAdapter(context,mArrayList);
+
+        mAdapter.setOnItemClickListener(new CustomAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int pos) {
+                switch (v.getId()) {
+                    case R.id.i_am_image:
+                        Intent i = getActivity().getIntent();
+                        Bundle extras = i.getExtras();
+                        String imgPath = extras.getString("filename");
+                        ImageView img = (ImageView) v;
+                        Glide.with(context).load(imgPath).into(img);
+                        break;
+                }
+            }
+        });
+
         checkSelfPermission();
         contentResolver = context.getContentResolver();
     }
