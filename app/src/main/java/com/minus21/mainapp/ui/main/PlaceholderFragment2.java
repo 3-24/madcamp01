@@ -95,7 +95,6 @@ public class PlaceholderFragment2 extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main2, container, false);
-
         mRecyclerView = (RecyclerView) root.findViewById(R.id.gallery);
         mRecyclerView.setHasFixedSize(true);
 

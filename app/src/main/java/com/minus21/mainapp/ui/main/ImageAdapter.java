@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.minus21.mainapp.R;
 
 import java.io.IOException;
@@ -64,16 +65,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.CustomViewHo
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, int position) {
         String data = mList.get(position);
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(data));
-            ImageView imageView = (ImageView) viewholder.imageView.findViewById(R.id.i_am_image);
-            imageView.setImageBitmap(bitmap);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ImageView imageView = (ImageView) viewholder.imageView.findViewById(R.id.i_am_image);
+        Glide.with(context).load(data).into(imageView);
     }
-
+    
     @Override
     public int getItemCount() {
         return (null != mList ? mList.size() : 0);
