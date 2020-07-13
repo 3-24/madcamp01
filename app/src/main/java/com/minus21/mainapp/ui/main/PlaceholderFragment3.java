@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.minus21.mainapp.R;
 
@@ -37,7 +38,7 @@ public class PlaceholderFragment3 extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FusedLocationProviderClient fusedLocationClient;
     private double latitude = 0, longitude = 0;
-    private WeatherInfo mWeatherInfo = 0;
+    private WeatherInfo mWeatherInfo = null;
 
     public static PlaceholderFragment3 newInstance(int index) {
         PlaceholderFragment3 fragment = new PlaceholderFragment3();
@@ -86,7 +87,9 @@ public class PlaceholderFragment3 extends Fragment {
         @GET("weather")
         Call<JsonObject> getWeather ( @Query("lat") double lat,
                                       @Query("lon") double lon,
-                                      @Query("appid") String appid);
+                                      @Query("appid") String appid,
+                                      @Query("lang") String lang
+        );
     }
 
     private void getWeather(double latitude, double longitude){
@@ -95,13 +98,23 @@ public class PlaceholderFragment3 extends Fragment {
                 .baseUrl(ApiService.BASE_URL)
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<JsonObject> call = apiService.getWeather(latitude, longitude, ApiService.serviceKey);
+        Call<JsonObject> call = apiService.getWeather(latitude, longitude, ApiService.serviceKey, "en");
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful()) {
                     JsonObject object = response.body();
-                    Log.d("weather",object.toString());
+                    JsonObject weather = (JsonObject)((JsonArray) object.get("weather")).get(0);
+                    JsonObject main = (JsonObject) object.get("main");
+                    mWeatherInfo = new WeatherInfo(
+                            weather.get("main").toString(),
+                            weather.get("icon").toString(),
+                            weather.get("description").toString(),
+                            object.get("name").toString(),
+                            main.get("temp").getAsInt(),
+                            main.get("feels_like").getAsInt()
+                            );
+                    mWeatherInfo.printAll();
                 }
                 else{
                     Log.d("weather", response.body().toString());
