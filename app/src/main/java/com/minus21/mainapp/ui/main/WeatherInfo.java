@@ -4,7 +4,6 @@ import android.util.Log;
 
 public class WeatherInfo {
     private String icon = null;
-    //"http://openweathermap.org/img/wn/10d@2x.png";
     private String description = null;
     private String location = null;
     private String main = null;

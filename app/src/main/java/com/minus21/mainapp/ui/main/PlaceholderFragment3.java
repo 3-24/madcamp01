@@ -39,6 +39,7 @@ public class PlaceholderFragment3 extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private double latitude = 0, longitude = 0;
     private WeatherInfo mWeatherInfo = null;
+    private View root;
 
     public static PlaceholderFragment3 newInstance(int index) {
         PlaceholderFragment3 fragment = new PlaceholderFragment3();
@@ -75,11 +76,9 @@ public class PlaceholderFragment3 extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_main3, container, false);
+        root = inflater.inflate(R.layout.fragment_main3, container, false);
         return root;
     }
-
-
 
     private interface ApiService {
         String BASE_URL = "https://api.openweathermap.org/data/2.5/";
