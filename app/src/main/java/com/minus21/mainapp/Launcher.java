@@ -24,7 +24,10 @@ public class Launcher extends Activity {
 
     String[] appPermissions = {
             Manifest.permission.READ_CONTACTS,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
     };
 
     @Override

@@ -1,5 +1,8 @@
 package com.minus21.mainapp.ui.main;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,9 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.JsonObject;
 import com.minus21.mainapp.R;
 
@@ -27,6 +35,8 @@ import retrofit2.http.Query;
 public class PlaceholderFragment3 extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private FusedLocationProviderClient fusedLocationClient;
+    private double latitude = 0, longitude = 0;
 
     public static PlaceholderFragment3 newInstance(int index) {
         PlaceholderFragment3 fragment = new PlaceholderFragment3();
@@ -37,20 +47,45 @@ public class PlaceholderFragment3 extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        /* Get location */
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
+                    Log.d("location",String.valueOf(latitude)+" "+String.valueOf(longitude));
+                }
+            });
+        }
+    }
+
+    @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main3, container, false);
-        getWeather(0,0);
+        getWeather(latitude,longitude);
         return root;
     }
+
+
 
     private interface ApiService {
         String BASE_URL = "https://api.openweathermap.org/data/2.5/";
         String serviceKey = "SECRET";
         @GET("weather")
-        Call<JsonObject> getWeather ( @Query("q") String city,
-                                      @Query("appid") String appKey);
+        Call<JsonObject> getWeather ( @Query("lat") double lat,
+                                      @Query("lon") double lon,
+                                      @Query("appid") String appid);
     }
 
     private void getWeather(double latitude, double longitude){
@@ -58,7 +93,7 @@ public class PlaceholderFragment3 extends Fragment {
                 .baseUrl(ApiService.BASE_URL)
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<JsonObject> call = apiService.getWeather("seoul", ApiService.serviceKey);
+        Call<JsonObject> call = apiService.getWeather(latitude, longitude, ApiService.serviceKey);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
