@@ -2,15 +2,18 @@ package com.minus21.mainapp.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
+
+import android.content.Context;
+import android.content.Intent;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
+import com.minus21.mainapp.ContactActivity;
+import com.minus21.mainapp.PopupActivity;
 import com.minus21.mainapp.R;
 import java.util.ArrayList;
 
@@ -18,20 +21,14 @@ import java.util.ArrayList;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
 
     private ArrayList<ContactInfo> mList;
+    private Context context;
 
-    public interface OnItemClickListener {
-        void onItemClick(View v,int pos);
+    public CustomAdapter(Context context, ArrayList<ContactInfo> list) {
+        this.context = context;
+        this.mList = list;
     }
-
-    private OnItemClickListener mListener = null;
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mListener = listener;
-    }
-
     /* CustomViewHolder constructed with textViews */
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        protected TextView id;
         protected TextView name;
         protected TextView phnumber;
 
@@ -43,7 +40,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        mListener.onItemClick(v,pos);
+                        Intent intent = new Intent(context, ContactActivity.class);
+                        intent.putExtra("name",mList.get(pos).getName());
+                        intent.putExtra("phnumber",mList.get(pos).getPhNumber());
+                        intent.putExtra("email",mList.get(pos).getEmail());
+                        intent.putExtra("note",mList.get(pos).getNote());
+                        context.startActivity(intent);
                     }
                 }
             });
@@ -53,9 +55,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         }
     }
 
-    public CustomAdapter(ArrayList<ContactInfo> list) {
-        this.mList = list;
-    }
+
 
     /* Called when RecyclerView needs a new RecyclerView.ViewHolder of the given type
      * to represent an item. */

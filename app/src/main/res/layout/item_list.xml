@@ -7,23 +7,47 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/list_name"
-        android:layout_width="250dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toTopOf="@+id/list_number"
+    <ImageView
+        android:id="@+id/profile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/person"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.043"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:layout_width="250dp"
+        android:layout_height="10dp"
+        android:text=""
+        android:id="@+id/blank"
+        app:layout_constraintBottom_toTopOf="@+id/list_name"
+        app:layout_constraintLeft_toRightOf="@id/profile"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/list_name"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:textColor="#000000"
+        android:fontFamily="@font/cafe24oneprettynight"
+        app:layout_constraintBottom_toTopOf="@+id/list_number"
+        app:layout_constraintHorizontal_bias="0.198"
+        app:layout_constraintLeft_toRightOf="@id/profile"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blank" />
+
+    <TextView
         android:id="@+id/list_number"
         android:layout_width="250dp"
         android:layout_height="30dp"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:fontFamily="@font/cafe24oneprettynight"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintLeft_toRightOf="@id/profile"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/list_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

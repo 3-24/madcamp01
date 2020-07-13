@@ -5,7 +5,17 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
+
+    <style name="AppTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/YourTextAppareance</item>
+    </style>
+    <style name="YourTextAppareance" parent="TextAppearance.Design.Tab">
+        <item name="android:fontFamily">@font/cafe24oneprettynight</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+    <!--        <item name="android:fontFamily">@font/cafe24oneprettynight</item>-->
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
