@@ -37,6 +37,7 @@ public class PlaceholderFragment3 extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FusedLocationProviderClient fusedLocationClient;
     private double latitude = 0, longitude = 0;
+    private WeatherInfo mWeatherInfo = 0;
 
     public static PlaceholderFragment3 newInstance(int index) {
         PlaceholderFragment3 fragment = new PlaceholderFragment3();
@@ -61,6 +62,7 @@ public class PlaceholderFragment3 extends Fragment {
                     if (location != null) {
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
+                        getWeather(latitude,longitude);
                     }
                     Log.d("location",String.valueOf(latitude)+" "+String.valueOf(longitude));
                 }
@@ -73,7 +75,6 @@ public class PlaceholderFragment3 extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main3, container, false);
-        getWeather(latitude,longitude);
         return root;
     }
 
@@ -89,6 +90,7 @@ public class PlaceholderFragment3 extends Fragment {
     }
 
     private void getWeather(double latitude, double longitude){
+        if(latitude == 0 && longitude == 0) return;
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(ApiService.BASE_URL)
                 .build();
