@@ -22,7 +22,9 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonArray;
@@ -240,7 +242,6 @@ public class PlaceholderFragment3 extends Fragment {
         });
     }
 
-
     private void renderWeather(LineData data){
         mainField.setText(mWeatherInfo.current.main);
         temperatureField.setText(String.valueOf((int)mWeatherInfo.current.temp - 273) + "℃" );
@@ -252,6 +253,11 @@ public class PlaceholderFragment3 extends Fragment {
         currentHumidityField.setText(String.valueOf(mWeatherInfo.current.humidity)+"%");
 
         lineChart.setData(data);
+//        lineChart.setDescription("");
+        lineChart.getAxisLeft().setDrawLabels(false);
+        lineChart.getAxisRight().setDrawLabels(false);
+//        lineChart.getXAxis().setDrawLabels(false);
+        lineChart.getLegend().setEnabled(false);
         lineChart.notifyDataSetChanged();
         lineChart.invalidate();
 

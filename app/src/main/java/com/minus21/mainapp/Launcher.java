@@ -22,6 +22,8 @@ public class Launcher extends Activity {
     private static final int REQUEST_EXIT = 1;
     private static final int PERMISSIONS_REQUEST_CODE = 1240;
 
+
+
     String[] appPermissions = {
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -32,11 +34,17 @@ public class Launcher extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setContentView(R.layout.loading);
         super.onCreate(savedInstanceState);
         if (checkAndRequestPermissions())
             startMainActivity();
-
         /* Start MainActivity */
+    }
+
+    @Override
+    protected void onResume() {
+        setContentView(R.layout.loading);
+        super.onResume();
     }
 
     private boolean checkAndRequestPermissions(){
