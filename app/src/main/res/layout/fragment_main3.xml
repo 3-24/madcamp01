@@ -8,28 +8,87 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/temp"
+        android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
-        android:layout_marginLeft="16dp"
+        android:text="DAEJEON"
+        android:textSize="28dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/temp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="9°"
         android:textSize="72dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/main"
         app:layout_constraintLeft_toLeftOf="parent"
         />
 
     <TextView
-        android:id="@+id/main"
+    android:id="@+id/main"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Cloudy"
+    android:textSize="32dp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/temp"
+    app:layout_constraintBottom_toTopOf="@+id/desc"
+    />
+
+    <TextView
+        android:id="@+id/desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cloudy"
-        android:textSize="28dp"
+        android:text="(Scattered Cloud)"
+        android:textSize="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/temp"
+        app:layout_constraintTop_toBottomOf="@id/main"
+        app:layout_constraintBottom_toTopOf="@+id/humidity"
         />
+
+
+    <TextView
+        android:id="@+id/humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Humidity: 64%"
+        android:textSize="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/desc"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+    <TextView
+        android:id="@+id/sunrise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="07:34"
+        android:textSize="24dp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/humidity"
+        app:layout_constraintRight_toLeftOf="@+id/sunset"
+        />
+    <TextView
+        android:id="@+id/sunset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="28:34"
+        android:textSize="24dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/humidity"
+        app:layout_constraintLeft_toRightOf="@id/sunrise"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
