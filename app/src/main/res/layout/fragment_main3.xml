@@ -1,179 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
-    android:orientation="vertical"
     android:scrollbars="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp">
-
-        <TextView
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="DAEJEON"
-            android:textSize="25dp"
-            android:fontFamily="@font/cafe24oneprettynight"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/temp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            />
-
-        <TextView
-            android:id="@+id/temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="9°"
-            android:textSize="60dp"
-            app:layout_constraintBottom_toTopOf="@+id/main"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/location" />
-
-        <TextView
-            android:id="@+id/main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cafe24oneprettynight"
-            android:text="Cloudy"
-            android:textSize="35dp"
-            app:layout_constraintBottom_toTopOf="@+id/desc"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/temp" />
-
-        <TextView
-            android:id="@+id/desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="(Scattered Cloud)"
-            android:textSize="20dp"
-            android:fontFamily="@font/cafe24oneprettynight"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/main"
-            app:layout_constraintBottom_toTopOf="@+id/sunrise"
-            />
-
-        <TextView
-            android:id="@+id/sunrise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="07:34"
-            android:textSize="24dp"
-            android:fontFamily="@font/cafe24oneprettynight"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/desc"
-            app:layout_constraintRight_toLeftOf="@+id/sunset"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-        <TextView
-            android:id="@+id/sunset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="28:34"
-            android:textSize="24dp"
-            android:layout_marginLeft="8dp"
-            android:fontFamily="@font/cafe24oneprettynight"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/desc"
-            app:layout_constraintLeft_toRightOf="@id/sunrise"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/weekly"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:scrollbars="horizontal" />
-
     <LinearLayout
-        android:id="@+id/today"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
-        <LinearLayout
-            android:id="@+id/wind"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/wind"/>
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
             <TextView
-                android:layout_width="100dp"
-                android:layout_height="20dp"
-                android:text="Wind"
-                android:fontFamily="@font/cafe24oneprettynight"/>
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/cafe24oneprettynight"
+                android:text="DAEJEON"
+                android:textSize="25dp"
+                app:layout_constraintBottom_toTopOf="@+id/temp"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
-                android:id="@+id/wind_value"
-                android:layout_width="100dp"
-                android:layout_height="20dp"
-                android:text="10km/hr"
-                android:fontFamily="@font/cafe24oneprettynight"/>
-        </LinearLayout>
+                android:id="@+id/temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="9°"
+                android:textSize="50dp"
+                app:layout_constraintBottom_toTopOf="@+id/main"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location" />
+
+            <TextView
+                android:id="@+id/main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cafe24oneprettynight"
+                android:text="Cloudy"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toTopOf="@+id/desc"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/temp" />
+
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(Scattered Cloud)"
+                android:textSize="20dp"
+                android:fontFamily="@font/cafe24oneprettynight"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/main"
+                app:layout_constraintBottom_toTopOf="@+id/sunrise"
+                />
+
+            <TextView
+                android:id="@+id/sunrise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="07:34"
+                android:textSize="20dp"
+                android:fontFamily="@font/cafe24oneprettynight"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/desc"
+                app:layout_constraintRight_toLeftOf="@+id/sunset"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <TextView
+                android:id="@+id/sunset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="28:34"
+                android:textSize="20dp"
+                android:layout_marginLeft="8dp"
+                android:fontFamily="@font/cafe24oneprettynight"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/desc"
+                app:layout_constraintLeft_toRightOf="@id/sunrise"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/weekly"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="20dp"
+            android:layout_gravity="center_horizontal|fill_horizontal"
+            android:scrollbars="horizontal" />
 
         <LinearLayout
-            android:id="@+id/Cloud_cover"
-            android:layout_width="120dp"
+            android:id="@+id/today"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"/>
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="20dp"
-                android:text="Cloud Cover"
-                android:fontFamily="@font/cafe24oneprettynight"/>
-            <TextView
-                android:id="@+id/cloud_value"
-                android:layout_width="100dp"
-                android:layout_height="20dp"
-                android:text="10.0km"
-                android:fontFamily="@font/cafe24oneprettynight"/>
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/wind"
+                android:layout_width="120dp"
+                android:layout_height="100dp"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/wind"/>
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:text="Wind"
+                    android:fontFamily="@font/cafe24oneprettynight"/>
+                <TextView
+                    android:id="@+id/wind_value"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:text="10km/hr"
+                    android:fontFamily="@font/cafe24oneprettynight"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Cloud_cover"
+                android:layout_width="120dp"
+                android:layout_height="100dp"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/cloud"/>
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:text="Cloud Cover"
+                    android:fontFamily="@font/cafe24oneprettynight"/>
+                <TextView
+                    android:id="@+id/cloud_value"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:text="10.0km"
+                    android:fontFamily="@font/cafe24oneprettynight"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/humidity"
+                android:layout_width="120dp"
+                android:layout_height="100dp"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/humidity"/>
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:text="Humidity"
+                    android:fontFamily="@font/cafe24oneprettynight"/>
+                <TextView
+                    android:id="@+id/humidity_value"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:text="10.0%"
+                    android:fontFamily="@font/cafe24oneprettynight"/>
+            </LinearLayout>
+
+
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/humidity"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/humidity"/>
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="20dp"
-                android:text="Humidity"
-                android:fontFamily="@font/cafe24oneprettynight"/>
-            <TextView
-                android:id="@+id/humidity_value"
-                android:layout_width="100dp"
-                android:layout_height="20dp"
-                android:text="10.0%"
-                android:fontFamily="@font/cafe24oneprettynight"/>
-        </LinearLayout>
-
-
-    </LinearLayout>
         />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</ScrollView>
