@@ -132,8 +132,7 @@
             android:orientation="vertical">
             <ImageView
                 android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/weather_03d"/>
+                android:layout_height="60dp"/>
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="20dp"

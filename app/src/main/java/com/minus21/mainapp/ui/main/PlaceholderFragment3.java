@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -48,6 +50,7 @@ public class PlaceholderFragment3 extends Fragment {
     TextView currentWindField = null;
     TextView currentCloudField = null;
     TextView currentHumidityField = null;
+    WeeklyWeatherAdpater adapter;
 
     public static PlaceholderFragment3 newInstance(int index) {
         PlaceholderFragment3 fragment = new PlaceholderFragment3();
@@ -60,6 +63,9 @@ public class PlaceholderFragment3 extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mWeatherInfo = new WeatherInfo();
+        adapter = new WeeklyWeatherAdpater(getActivity(), mWeatherInfo.daily);
         /* Get the location and load a weather info on success */
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -82,6 +88,10 @@ public class PlaceholderFragment3 extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_main3, container, false);
+
+        RecyclerView recyclerView = root.findViewById(R.id.weekly);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(adapter);
 
         mainField = root.findViewById(R.id.main);
         temperatureField = root.findViewById(R.id.temp);
@@ -121,7 +131,6 @@ public class PlaceholderFragment3 extends Fragment {
                     JsonObject object = response.body();
                     JsonObject current = (JsonObject) object.get("current");
                     JsonObject current_weather = (JsonObject)((JsonArray) current.get("weather")).get(0);
-                    mWeatherInfo = new WeatherInfo();
                     mWeatherInfo.timezone_offset = object.get("timezone_offset").getAsLong();
                     mWeatherInfo.setCurrentWeather(
                             current.get("dt").getAsLong(),
@@ -184,8 +193,11 @@ public class PlaceholderFragment3 extends Fragment {
                                 dayObj_temp.get("min").getAsDouble());
                         mWeatherInfo.addDaily(w);
                     }
+                    mWeatherInfo.daily.remove(7);
+
                     mWeatherInfo.logAll();
                     renderWeather();
+                    adapter.notifyDataSetChanged();
                 }
                 else{
                     Log.d("weather", response.body().toString());
