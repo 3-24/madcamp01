@@ -207,8 +207,16 @@ public class PlaceholderFragment3 extends Fragment {
                     mWeatherInfo.logAll();
                     /* Plot data */
                     ArrayList<Entry> entries = new ArrayList<>();
+                    boolean enable = false;
+                    int current_time = getHour(mWeatherInfo.current.dt);
+                    int count = 0;
                     for (Weather w: mWeatherInfo.hourly){
-                        entries.add(new Entry(getTime(w.dt), (float)w.temp));
+                        int wtime = getHour(w.dt);
+                        if (wtime == current_time) enable = true;
+                        if (!enable) continue;
+                        entries.add(new Entry(getHour(w.dt), (float)w.temp-273));
+                        count++;
+                        if (count >= 24) break;
                     }
                     LineDataSet set1 = new LineDataSet(entries, "temp");
                     ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -244,6 +252,8 @@ public class PlaceholderFragment3 extends Fragment {
         currentHumidityField.setText(String.valueOf(mWeatherInfo.current.humidity)+"%");
 
         lineChart.setData(data);
+        lineChart.notifyDataSetChanged();
+        lineChart.invalidate();
 
     }
 
@@ -253,7 +263,7 @@ public class PlaceholderFragment3 extends Fragment {
         return dateString;
     }
 
-    public int getTime(long timestamp){
+    public int getHour(long timestamp){
         SimpleDateFormat formatter = new SimpleDateFormat("HH");
         String hourString = formatter.format(new Date(timestamp*1000));
         return Integer.parseInt(hourString);
