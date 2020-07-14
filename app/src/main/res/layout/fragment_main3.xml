@@ -15,7 +15,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:paddingBottom="20dp">
 
             <TextView
@@ -216,8 +216,15 @@
             android:gravity="center"
             android:scrollbars="horizontal" />
 
-
-        
+        <TextView
+            android:text="Day Temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/cafe24oneprettynight"/>
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

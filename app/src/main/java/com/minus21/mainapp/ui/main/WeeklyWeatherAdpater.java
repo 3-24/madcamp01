@@ -14,10 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.minus21.mainapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class WeeklyWeatherAdpater extends RecyclerView.Adapter<WeeklyWeatherAdpater.ViewHolder> {
     private ArrayList<Weather> mData = null;
+    final String[] dayOfWeekArray = {null,"MON","TUE","WED","THU","FRI","SAT","SUN"};
     Context context;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -57,7 +60,7 @@ public class WeeklyWeatherAdpater extends RecyclerView.Adapter<WeeklyWeatherAdpa
 
         holder.dayMaxTempField.setText(String.valueOf((int)weather.temp_max-273 ));
         holder.dayMinTempField.setText(String.valueOf((int)weather.temp_min-273 ));
-        holder.dayNameField.setText("MON");
+        holder.dayNameField.setText(dayOfWeekArray[getDayNameOfWeek(weather.dt)]);
         Glide.with(context).load(image_uri).into(holder.dayWeatherImageField);
     }
 
@@ -66,4 +69,9 @@ public class WeeklyWeatherAdpater extends RecyclerView.Adapter<WeeklyWeatherAdpa
         return mData.size();
     }
 
+    public int getDayNameOfWeek(long timestamp){
+        SimpleDateFormat formatter = new SimpleDateFormat("u");
+        String dayNameOfWeekString = formatter.format(new Date(timestamp*1000));
+        return Integer.parseInt(dayNameOfWeekString);
+    }
 }

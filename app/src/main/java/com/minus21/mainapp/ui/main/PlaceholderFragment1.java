@@ -42,12 +42,9 @@ public class PlaceholderFragment1 extends Fragment {
     private CustomAdapter adapter;
     private LinearLayoutManager layoutManager;
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
-    public static PlaceholderFragment1 newInstance(int index) {
+    public static PlaceholderFragment1 newInstance() {
         PlaceholderFragment1 fragment = new PlaceholderFragment1();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
         return fragment;
     }
