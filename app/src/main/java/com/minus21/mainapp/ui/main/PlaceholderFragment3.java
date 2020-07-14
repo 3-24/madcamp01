@@ -2,6 +2,7 @@ package com.minus21.mainapp.ui.main;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonArray;
@@ -25,6 +31,7 @@ import com.google.gson.JsonObject;
 import com.minus21.mainapp.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import retrofit2.Call;
@@ -50,6 +57,7 @@ public class PlaceholderFragment3 extends Fragment {
     TextView currentWindField = null;
     TextView currentCloudField = null;
     TextView currentHumidityField = null;
+    LineChart lineChart = null;
     WeeklyWeatherAdpater adapter;
 
     public static PlaceholderFragment3 newInstance(int index) {
@@ -101,6 +109,7 @@ public class PlaceholderFragment3 extends Fragment {
         currentCloudField = root.findViewById(R.id.cloud_value);
         currentWindField = root.findViewById(R.id.wind_value);
         currentHumidityField = root.findViewById(R.id.humidity_value);
+        lineChart = root.findViewById(R.id.chart);
         return root;
     }
 
@@ -196,7 +205,19 @@ public class PlaceholderFragment3 extends Fragment {
                     mWeatherInfo.daily.remove(7);
 
                     mWeatherInfo.logAll();
-                    renderWeather();
+                    /* Plot data */
+                    ArrayList<Entry> entries = new ArrayList<>();
+                    for (Weather w: mWeatherInfo.hourly){
+                        entries.add(new Entry(getTime(w.dt), (float)w.temp));
+                    }
+                    LineDataSet set1 = new LineDataSet(entries, "temp");
+                    ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                    dataSets.add(set1);
+                    LineData data = new LineData(dataSets);
+                    set1.setColor(Color.BLACK);
+                    set1.setCircleColor(Color.BLACK);
+
+                    renderWeather(data);
                     adapter.notifyDataSetChanged();
                 }
                 else{
@@ -212,7 +233,7 @@ public class PlaceholderFragment3 extends Fragment {
     }
 
 
-    private void renderWeather(){
+    private void renderWeather(LineData data){
         mainField.setText(mWeatherInfo.current.main);
         temperatureField.setText(String.valueOf((int)mWeatherInfo.current.temp - 273) + "℃" );
         descriptionField.setText("("+mWeatherInfo.current.desc+")");
@@ -221,12 +242,21 @@ public class PlaceholderFragment3 extends Fragment {
         currentCloudField.setText(String.valueOf(mWeatherInfo.current.cloud)+"%");
         currentWindField.setText(String.valueOf(mWeatherInfo.current.wind_speed)+"m/s");
         currentHumidityField.setText(String.valueOf(mWeatherInfo.current.humidity)+"%");
+
+        lineChart.setData(data);
+
     }
 
     public String timeFormat(long timestamp){
-
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         String dateString = formatter.format(new Date(timestamp*1000));
         return dateString;
     }
+
+    public int getTime(long timestamp){
+        SimpleDateFormat formatter = new SimpleDateFormat("HH");
+        String hourString = formatter.format(new Date(timestamp*1000));
+        return Integer.parseInt(hourString);
+    }
+
 }
