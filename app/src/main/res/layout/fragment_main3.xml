@@ -98,90 +98,120 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/weekly"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:paddingTop="40dp"
-            android:paddingBottom="20dp"
-            android:layout_gravity="center_horizontal|fill_horizontal"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:scrollbars="horizontal" />
 
         <LinearLayout
             android:id="@+id/today"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_gravity="center"
             android:orientation="horizontal">
             <LinearLayout
                 android:id="@+id/wind"
-                android:layout_width="120dp"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:gravity="center"
+                android:layout_gravity="center"
                 android:orientation="vertical">
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
                     android:background="@drawable/wind"/>
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="20dp"
                     android:text="Wind"
+                    android:textSize="15dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:fontFamily="@font/cafe24oneprettynight"/>
                 <TextView
                     android:id="@+id/wind_value"
                     android:layout_width="100dp"
                     android:layout_height="20dp"
                     android:text="10km/hr"
+                    android:textSize="14dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:fontFamily="@font/cafe24oneprettynight"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/Cloud_cover"
-                android:layout_width="120dp"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
                     android:background="@drawable/cloud"/>
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="20dp"
                     android:text="Cloud Cover"
+                    android:textSize="15dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:fontFamily="@font/cafe24oneprettynight"/>
                 <TextView
                     android:id="@+id/cloud_value"
                     android:layout_width="100dp"
                     android:layout_height="20dp"
                     android:text="10.0km"
+                    android:textSize="14dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:fontFamily="@font/cafe24oneprettynight"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/humidity"
-                android:layout_width="120dp"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
                     android:background="@drawable/humidity"/>
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="20dp"
                     android:text="Humidity"
+                    android:textSize="15dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:fontFamily="@font/cafe24oneprettynight"/>
                 <TextView
                     android:id="@+id/humidity_value"
                     android:layout_width="100dp"
                     android:layout_height="20dp"
                     android:text="10.0%"
+                    android:textSize="14dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:fontFamily="@font/cafe24oneprettynight"/>
             </LinearLayout>
-
-
         </LinearLayout>
         />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="150dp"
+            android:scrollbars="horizontal">
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </ScrollView>
+
     </LinearLayout>
 </ScrollView>
