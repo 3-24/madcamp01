@@ -2,38 +2,46 @@ package com.minus21.mainapp.ui.main;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class WeatherInfo {
-    private String icon = null;
-    private String description = null;
-    private String location = null;
-    private String main = null;
-    private int temp = 0;
-    private int temp_feel_like = 0;
+    public int timezone_offset;
+    public Weather current;
+    public ArrayList<Weather> hourly;
+    public ArrayList<Weather> daily;
 
-    public WeatherInfo(String main, String icon, String description, String location, int temp, int temp_feel_like) {
-        this.main = main.replace("\"","");
-        this.icon = String.format("http://openweathermap.org/img/wn/%s@2x.png",icon).replace("\"","");
-        this.description = description.replace("\"","");
-        this.location = location.replace("\"","");
-        this.temp = temp;
-        this.temp_feel_like = temp_feel_like;
-        Log.d("weather", main);
+
+    public WeatherInfo(){
+        this.current = new Weather();
+        this.hourly = new ArrayList<>();
+        this.daily = new ArrayList<>();
     }
 
-    public String getMain() {
-        return main;
+    public void setCurrentWeather(int dt, int sunrise, int sunset,
+                                  double temp, double feels_like, int humidity,
+                                  int cloud, double wind_speed,
+                                  int id, String main, String desc, String icon) {
+        this.current.setWeather(dt, sunrise, sunset, temp, feels_like, humidity,
+                cloud, wind_speed, id, main, desc, icon);
     }
 
-    public int getTemp() {
-        return temp-273;
+    public void addHourly(Weather w){
+        hourly.add(w);
     }
 
-    public void printAll(){
-        Log.d("WeatherInfo", icon);
-        Log.d("WeatherInfo", description);
-        Log.d("WeatherInfo", location);
-        Log.d("WeatherInfo", main);
-        Log.d("WeatherInfo", String.valueOf(temp));
-        Log.d("WeatherInfo", String.valueOf(temp_feel_like));
+    public void addDaily(Weather w){
+        daily.add(w);
     }
+
+    public void logAll(){
+        Log.d("weather", String.valueOf(timezone_offset));
+        this.current.logAll();
+        for (Weather w: hourly){
+            w.logAll();
+        }
+        for (Weather w:daily){
+            w.logAll();
+        }
+    }
+
 }

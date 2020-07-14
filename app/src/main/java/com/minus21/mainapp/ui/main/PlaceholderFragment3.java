@@ -17,8 +17,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.minus21.mainapp.R;
 
@@ -85,12 +85,13 @@ public class PlaceholderFragment3 extends Fragment {
     /* Interface for retrofit request */
     private interface ApiService {
         String BASE_URL = "https://api.openweathermap.org/data/2.5/";
-        String serviceKey = "";         // API key from openweathermap.org
-        @GET("weather")
+        String serviceKey = "4472d4285a54ef872a0f4b46dbaa5ffa";         // API key from openweathermap.org
+        @GET("onecall")
         Call<JsonObject> getWeather ( @Query("lat") double lat,
                                       @Query("lon") double lon,
                                       @Query("appid") String appid,
-                                      @Query("lang") String lang
+                                      @Query("lang") String lang,
+                                      @Query("exclude") String excludes
         );
     }
 
@@ -100,24 +101,80 @@ public class PlaceholderFragment3 extends Fragment {
                 .baseUrl(ApiService.BASE_URL)
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<JsonObject> call = apiService.getWeather(latitude, longitude, ApiService.serviceKey, "en");
+        Call<JsonObject> call = apiService.getWeather(latitude, longitude, ApiService.serviceKey, "en", "miniutely");
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful()) {
                     JsonObject object = response.body();
-                    JsonObject weather = (JsonObject)((JsonArray) object.get("weather")).get(0);
-                    JsonObject main = (JsonObject) object.get("main");
-                    mWeatherInfo = new WeatherInfo(
-                            weather.get("main").toString(),
-                            weather.get("icon").toString(),
-                            weather.get("description").toString(),
-                            object.get("name").toString(),
-                            main.get("temp").getAsInt(),
-                            main.get("feels_like").getAsInt()
+                    JsonObject current = (JsonObject) object.get("current");
+                    JsonObject current_weather = (JsonObject)((JsonArray) current.get("weather")).get(0);
+
+                    mWeatherInfo = new WeatherInfo();
+                    mWeatherInfo.timezone_offset = object.get("timezone_offset").getAsInt();
+                    mWeatherInfo.setCurrentWeather(
+                            current.get("dt").getAsInt(),
+                            current.get("sunrise").getAsInt(),
+                            current.get("sunset").getAsInt(),
+                            current.get("temp").getAsDouble(),
+                            current.get("feels_like").getAsDouble(),
+                            current.get("humidity").getAsInt(),
+                            current.get("clouds").getAsInt(),
+                            current.get("wind_speed").getAsDouble(),
+                            current_weather.get("id").getAsInt(),
+                            current_weather.get("main").getAsString(),
+                            current_weather.get("description").getAsString(),
+                            current_weather.get("icon").getAsString()
                             );
+
+                    JsonArray hourly = (JsonArray) object.get("hourly");
+                    JsonArray daily = (JsonArray) object.get("daily");
+
+                    for (JsonElement hour : hourly) {
+                        JsonObject hourObj = hour.getAsJsonObject();
+                        JsonObject hourObj_weather = (JsonObject)((JsonArray) hourObj.get("weather")).get(0);
+                        Weather w = new Weather();
+                        w.setWeather(
+                                hourObj.get("dt").getAsInt(),
+                                0,0,
+                                hourObj.get("temp").getAsDouble(),
+                                hourObj.get("feels_like").getAsDouble(),
+                                hourObj.get("humidity").getAsInt(),
+                                hourObj.get("clouds").getAsInt(),
+                                hourObj.get("wind_speed").getAsDouble(),
+                                hourObj_weather.get("id").getAsInt(),
+                                hourObj_weather.get("main").getAsString(),
+                                hourObj_weather.get("description").getAsString(),
+                                hourObj_weather.get("icon").getAsString()
+                        );
+                        mWeatherInfo.addHourly(w);
+                    }
+
+                    for (JsonElement day : daily){
+                        JsonObject dayObj = day.getAsJsonObject();
+                        JsonObject dayObj_temp = (JsonObject) dayObj.get("temp");
+                        JsonObject dayObj_weather = (JsonObject)((JsonArray) dayObj.get("weather")).get(0);
+                        Weather w = new Weather();
+                        w.setWeather(
+                            dayObj.get("dt").getAsInt(),
+                            dayObj.get("sunrise").getAsInt(),
+                            dayObj.get("sunset").getAsInt(),
+                            0,0,
+                            dayObj.get("humidity").getAsInt(),
+                            dayObj.get("clouds").getAsInt(),
+                            dayObj.get("wind_speed").getAsDouble(),
+                            dayObj_weather.get("id").getAsInt(),
+                            dayObj_weather.get("main").getAsString(),
+                            dayObj_weather.get("description").getAsString(),
+                            dayObj_weather.get("icon").getAsString()
+                        );
+                        w.setMaxMinTemp(
+                                dayObj_temp.get("max").getAsDouble(),
+                                dayObj_temp.get("min").getAsDouble());
+                        mWeatherInfo.addDaily(w);
+                    }
+                    mWeatherInfo.logAll();
                     renderWeather();
-                    mWeatherInfo.printAll();
                 }
                 else{
                     Log.d("weather", response.body().toString());
@@ -133,7 +190,7 @@ public class PlaceholderFragment3 extends Fragment {
 
 
     private void renderWeather(){
-        mainField.setText(mWeatherInfo.getMain());
-        temperatureField.setText(String.format("%d℃",mWeatherInfo.getTemp()));
+        //mainField.setText(mWeatherInfo.getMain());
+        //temperatureField.setText(String.format("%d℃",mWeatherInfo.getTemp()));
     }
 }
