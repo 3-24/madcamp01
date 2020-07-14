@@ -19,7 +19,7 @@
             android:gravity="center"
             android:minHeight="?actionBarSize"
             android:padding="@dimen/appbar_padding"
-            android:text="영석"
+            android:text="영석이의 하루"
             android:fontFamily="@font/cafe24oneprettynight"
             android:textSize="30sp"
             android:textStyle="bold"

@@ -133,7 +133,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_horizontal"
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
@@ -143,7 +143,7 @@
             <TextView
                 android:id="@+id/note"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="60dp"
                 android:fontFamily="@font/cafe24oneprettynight"
                 android:layout_gravity="center"
                 android:gravity="center"
@@ -155,9 +155,9 @@
             android:id="@+id/profile"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@drawable/person"
+            android:background="@drawable/person2"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.469"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"

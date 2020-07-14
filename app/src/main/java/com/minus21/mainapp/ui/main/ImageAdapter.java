@@ -3,12 +3,12 @@ package com.minus21.mainapp.ui.main;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,9 +24,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.CustomViewHo
 
     private ArrayList<String> mList = new ArrayList<String>();
     public int position;
-
-    private Animator currentAnimator;
-    private int shortAnimationDuration;
 
     public int getPosition() {
         return position;
@@ -50,10 +47,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.CustomViewHo
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    Log.d("position",String.valueOf(pos));
 
                     if (pos != RecyclerView.NO_POSITION) {
-                        Toast.makeText(context, mList.get(pos), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(context, PopupActivity.class);
                         intent.putExtra("url",mList.get(pos));
                         context.startActivity(intent);
@@ -61,13 +56,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.CustomViewHo
                 }
             });
 
-            // Retrieve and cache the system's default "short" animation time.
-            shortAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
-
             this.imageView = (ImageView) view.findViewById(R.id.i_am_image);
         }
     }
-
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
