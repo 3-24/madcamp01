@@ -25,7 +25,9 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonArray;
@@ -203,18 +205,15 @@ public class PlaceholderFragment3 extends Fragment {
                     mWeatherInfo.daily.remove(7);
                     /* Plot data */
                     ArrayList<Entry> entries = new ArrayList<>();
-                    boolean enable = false;
-                    int current_time = getHour(mWeatherInfo.current.dt);
                     int count = 0;
                     for (Weather w: mWeatherInfo.hourly){
-                        int wtime = getHour(w.dt);
-                        if (wtime == current_time) enable = true;
-                        if (!enable) continue;
-                        entries.add(new Entry(getHour(w.dt), (float)w.temp-273));
+                        Entry e = new Entry(getHour(w.dt), (float)w.temp-273);
+                        entries.add(e);
                         count++;
                         if (count >= 24) break;
                     }
                     LineDataSet set1 = new LineDataSet(entries, "temp");
+                    set1.setValueFormatter((new tempFormatter()));
                     ArrayList<ILineDataSet> dataSets = new ArrayList<>();
                     dataSets.add(set1);
                     LineData data = new LineData(dataSets);
@@ -236,6 +235,12 @@ public class PlaceholderFragment3 extends Fragment {
         });
     }
 
+    public class tempFormatter implements IValueFormatter{
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return String.valueOf(Math.round(value));
+        }
+    }
 
     private void renderWeather(LineData data){
         mainField.setText(mWeatherInfo.current.main);
@@ -246,6 +251,9 @@ public class PlaceholderFragment3 extends Fragment {
         currentCloudField.setText(String.valueOf(mWeatherInfo.current.cloud)+"%");
         currentWindField.setText(String.valueOf(mWeatherInfo.current.wind_speed)+"m/s");
         currentHumidityField.setText(String.valueOf(mWeatherInfo.current.humidity)+"%");
+        lineChart.getAxisLeft().setDrawLabels(false);
+        lineChart.getAxisRight().setDrawLabels(false);
+        lineChart.getLegend().setEnabled(false);
         lineChart.setData(data);
         lineChart.notifyDataSetChanged();
         lineChart.invalidate();
