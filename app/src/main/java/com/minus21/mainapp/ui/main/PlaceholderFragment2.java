@@ -1,57 +1,26 @@
 package com.minus21.mainapp.ui.main;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.minus21.mainapp.BuildConfig;
 import com.minus21.mainapp.R;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.annotation.Target;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -64,6 +33,10 @@ public class PlaceholderFragment2 extends Fragment {
     private RecyclerView mRecyclerView;
     private GridLayoutManager mLayoutManager;
     private ContentResolver contentResolver;
+
+//    private ScaleGestureDetector mScaleGestureDetector;
+//    private float mScaleFactor = 1.0f;
+//    private ImageView mImageView;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     public static PlaceholderFragment2 newInstance(int index) {
@@ -78,7 +51,6 @@ public class PlaceholderFragment2 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        //pageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
@@ -86,6 +58,7 @@ public class PlaceholderFragment2 extends Fragment {
 
         mArrayList = new ArrayList<>();
         mAdapter = new ImageAdapter(context,mArrayList);
+
         contentResolver = context.getContentResolver();
     }
 
@@ -108,6 +81,10 @@ public class PlaceholderFragment2 extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         updateData();
 
+//        View v = inflater.inflate(R.layout.img_popup,container,false);
+//        mImageView = (ImageView) v.findViewById(R.id.expanded_img);
+//        mScaleGestureDetector = new ScaleGestureDetector(context,new ScaleListener());
+
         return root;
     }
 
@@ -125,7 +102,6 @@ public class PlaceholderFragment2 extends Fragment {
             do {
                 Uri ContentUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
                 mArrayList.add(String.valueOf(ContentUri));
-                mAdapter.notifyDataSetChanged();
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -134,4 +110,25 @@ public class PlaceholderFragment2 extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
+//    public boolean onTouchEvent(MotionEvent motionEvent) {
+//        mScaleGestureDetector.onTouchEvent(motionEvent);
+//        return true;
+//    }
+//
+//    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+//        @Override
+//        public boolean onScale(ScaleGestureDetector scaleGestureDetector){
+//            // ScaleGestureDetector에서 factor를 받아 변수로 선언한 factor에 넣고
+//            mScaleFactor *= scaleGestureDetector.getScaleFactor();
+//
+//            // 최대 10배, 최소 10배 줌 한계 설정
+//            mScaleFactor = Math.max(0.1f,
+//                    Math.min(mScaleFactor, 10.0f));
+//
+//            // 이미지뷰 스케일에 적용
+//            mImageView.setScaleX(mScaleFactor);
+//            mImageView.setScaleY(mScaleFactor);
+//            return true;
+//        }
+//    }
 }

@@ -1,21 +1,21 @@
 package com.minus21.mainapp.ui.main;
 
-import android.Manifest;
 import android.content.ContentResolver;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.provider.ContactsContract;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.minus21.mainapp.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaceholderFragment1 extends Fragment {
     private ArrayList<ContactInfo> mArrayList = new ArrayList<ContactInfo>();
@@ -32,6 +33,13 @@ public class PlaceholderFragment1 extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ContentResolver contentResolver;
+    private Context context;
+    private RecyclerView recyclerView;
+    private EditText editSearch;
+    private ArrayList<ContactInfo> list;
+    private ArrayList<ContactInfo> arraylist;
+    private CustomAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -46,10 +54,10 @@ public class PlaceholderFragment1 extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        context = getActivity();
         mArrayList = new ArrayList<>();
-        mAdapter = new CustomAdapter(mArrayList);
-        
+        mAdapter = new CustomAdapter(context,mArrayList);
+
         contentResolver = getActivity().getContentResolver();
     }
 
@@ -65,10 +73,47 @@ public class PlaceholderFragment1 extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+
         updateData();
+
+        editSearch = (EditText) root.findViewById(R.id.editSearch);
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview_list);
+
+        list = new ArrayList<ContactInfo>();
+        settingList();
+
+        arraylist = new ArrayList<ContactInfo>();
+        arraylist.addAll(list);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new CustomAdapter(context,list);
+        recyclerView.setAdapter(adapter);
+
+        // input창에 검색어 입력 시 "addTextChangedListener" 이벤트 정의
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // input창에 문자를 입력할 때마다 호출됨
+                // search 메소드 호출
+                String text = editSearch.getText().toString();
+                search(text);
+            }
+        });
+
         return root;
     }
 
@@ -77,7 +122,13 @@ public class PlaceholderFragment1 extends Fragment {
         mArrayList.clear();
         String [] arrProjection = {
                 ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.Contacts.DISPLAY_NAME
+        };
+        String[] arrPhoneProjection = {
+                ContactsContract.CommonDataKinds.Phone.NUMBER
+        };
+        String[] arrEmailProjection = {
+                ContactsContract.CommonDataKinds.Email.DATA
         };
 
         Cursor clsCursor=contentResolver.query (
@@ -93,29 +144,95 @@ public class PlaceholderFragment1 extends Fragment {
                 /* Get phone number. This requires new cursor since phone number is
                 not located in ContactContract.Contacts */
                 String contactId = clsCursor.getString(0);
+
+                // phone number
                 Cursor phoneCursor = contentResolver.query(
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
+                        arrPhoneProjection,
                         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
                         null, null
                 );
-
-                phoneCursor.moveToFirst();
-                String phone = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneCursor.moveToNext();
+                String realnumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                String phone = realnumber.substring(0,3) +
+                        realnumber.substring(4,8) +
+                        realnumber.substring(9,13);
                 phoneCursor.close();
+
+                // email
+                Cursor emailCursor = contentResolver.query(
+                        ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                        arrEmailProjection,
+                        ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId,null,null
+                );
+                emailCursor.moveToNext();
+                Log.d("value",String.valueOf(ContactsContract.CommonDataKinds.Email.CONTENT_URI));
+                String email = emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                Log.d("email",email);
+                emailCursor.close();
+
+
+                // note
+                String noteWhere = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?";
+                String[] noteWhereParams = new String[] {
+                        contactId, ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE
+                };
+                Cursor noteCursor = contentResolver.query(
+                        ContactsContract.Data.CONTENT_URI, null, noteWhere, noteWhereParams, null
+                );
+
+                noteCursor.moveToFirst();
+                String note = noteCursor.getString(noteCursor.getColumnIndex(ContactsContract.CommonDataKinds.Note.NOTE));
+                noteCursor.close();
+
 
                 /* Make ContactInfo and update the array */
                 ContactInfo contactInfo = new ContactInfo(
-                        clsCursor.getInt(clsCursor.getColumnIndex(ContactsContract.Contacts._ID)),
                         clsCursor.getString(clsCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),
-                        phone
+                        phone, email, note
                 );
                 mArrayList.add(contactInfo);
             } while (clsCursor.moveToNext());
         }
         clsCursor.close();
-
         /* Notify to the adapter */
         mAdapter.notifyDataSetChanged();
+    }
+
+    // 검색을 수행하는 메소드
+    public void search(String charText) {
+
+        // 문자 입력시마다 리스트를 지우고 새로 뿌려준다.
+        list.clear();
+
+        // 문자 입력이 없을때는 모든 데이터를 보여준다.
+        if (charText.length() == 0) {
+            list.addAll(arraylist);
+        }
+        // 문자 입력을 할때..
+        else
+        {
+            // 리스트의 모든 데이터를 검색한다.
+            for(int i = 0;i < arraylist.size(); i++)
+            {
+                // arraylist의 모든 데이터에 입력받은 단어(charText)가 포함되어 있으면 true를 반환한다.
+                if (arraylist.get(i).getName().toLowerCase().contains(charText))
+                {
+                    // 검색된 데이터를 리스트에 추가한다.
+                    list.add(arraylist.get(i));
+                }
+                if (arraylist.get(i).getPhNumber().toLowerCase().contains(charText))
+                {
+                    list.add(arraylist.get(i));
+                }
+            }
+        }
+        // 리스트 데이터가 변경되었으므로 아답터를 갱신하여 검색된 데이터를 화면에 보여준다.
+        adapter.notifyDataSetChanged();
+    }
+
+    // 검색에 사용될 데이터를 리스트에 추가한다.
+    private void settingList(){
+        list = mArrayList;
     }
 }

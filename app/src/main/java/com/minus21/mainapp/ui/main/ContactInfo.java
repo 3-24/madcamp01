@@ -1,17 +1,10 @@
 package com.minus21.mainapp.ui.main;
 
 public class ContactInfo {
-    private int info_id;
     private String Name;
     private String phNumber;
-
-    public int getInfo_id() {
-        return info_id;
-    }
-
-    public void setInfo_id(int info_id) {
-        this.info_id = info_id;
-    }
+    private String email;
+    private String note;
 
     public String getName() {
         return Name;
@@ -29,9 +22,26 @@ public class ContactInfo {
         this.phNumber = phNumber;
     }
 
-    public ContactInfo(int info_id, String name, String phNumber) {
-        this.info_id = info_id;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public ContactInfo(String name, String phNumber, String email, String note) {
         Name = name;
         this.phNumber = phNumber;
+        this.email = email;
+        this.note = note;
     }
 }

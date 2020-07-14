@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:orientation="horizontal"
     android:padding="1dp"
+    android:clickable="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content" >
 
     <ImageView
         android:id="@+id/i_am_image"
         android:layout_width="100dp"
-        android:layout_height="90dp"
-        android:gravity="center"
-        android:scaleType="centerCrop"/>
 
-</LinearLayout>
+        android:layout_height="90dp"
+        android:scaleType="centerCrop" />
+
+
+
+</FrameLayout>
