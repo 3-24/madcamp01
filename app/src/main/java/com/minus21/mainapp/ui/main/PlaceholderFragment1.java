@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.minus21.mainapp.R;
 
@@ -78,6 +79,22 @@ public class PlaceholderFragment1 extends Fragment {
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         updateData();
+
+        final SwipeRefreshLayout pullToRefresh = root.findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        updateData();
+                    }
+                }
+                ).start();
+                //updateData();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         editSearch = (EditText) root.findViewById(R.id.editSearch);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -153,7 +170,6 @@ public class PlaceholderFragment1 extends Fragment {
                 );
                 phoneCursor.moveToNext();
                 String realnumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                Log.d("number",realnumber);
                 String phone = realnumber.replace("-","");
                 phoneCursor.close();
 
@@ -164,9 +180,7 @@ public class PlaceholderFragment1 extends Fragment {
                         ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId,null,null
                 );
                 emailCursor.moveToNext();
-                Log.d("value",String.valueOf(ContactsContract.CommonDataKinds.Email.CONTENT_URI));
                 String email = emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-                Log.d("email",email);
                 emailCursor.close();
 
 

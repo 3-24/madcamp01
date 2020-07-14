@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.minus21.mainapp.R;
 
@@ -81,6 +83,15 @@ public class PlaceholderFragment2 extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         updateData();
 
+        final SwipeRefreshLayout pullToRefresh = root.findViewById(R.id.pullToRefresh2);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateData();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
 //        View v = inflater.inflate(R.layout.img_popup,container,false);
 //        mImageView = (ImageView) v.findViewById(R.id.expanded_img);
 //        mScaleGestureDetector = new ScaleGestureDetector(context,new ScaleListener());
@@ -91,7 +102,6 @@ public class PlaceholderFragment2 extends Fragment {
     /* Update mArrayList and notify the change to the adapter */
     private void updateData(){
         mArrayList.clear();
-
         String[] projection = {
                 MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME};
 
