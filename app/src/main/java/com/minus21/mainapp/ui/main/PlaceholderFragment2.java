@@ -36,11 +36,9 @@ public class PlaceholderFragment2 extends Fragment {
     private GridLayoutManager mLayoutManager;
     private ContentResolver contentResolver;
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    public static PlaceholderFragment2 newInstance(int index) {
+    public static PlaceholderFragment2 newInstance() {
         PlaceholderFragment2 fragment = new PlaceholderFragment2();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -49,10 +47,6 @@ public class PlaceholderFragment2 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        int index = 1;
-        if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
 
         mArrayList = new ArrayList<>();
         mAdapter = new ImageAdapter(context,mArrayList);

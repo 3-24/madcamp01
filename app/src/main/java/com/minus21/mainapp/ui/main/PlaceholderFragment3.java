@@ -1,6 +1,8 @@
 package com.minus21.mainapp.ui.main;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,12 +46,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public class PlaceholderFragment3 extends Fragment {
-
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    private FusedLocationProviderClient fusedLocationClient;
-    private double latitude = 0, longitude = 0;
+    Context context;
     private WeatherInfo mWeatherInfo = null;
-    private View root;
     TextView mainField = null;
     TextView temperatureField = null;
     TextView descriptionField = null;
@@ -60,34 +59,32 @@ public class PlaceholderFragment3 extends Fragment {
     LineChart lineChart = null;
     WeeklyWeatherAdpater adapter;
 
-    public static PlaceholderFragment3 newInstance(int index) {
+    public static PlaceholderFragment3 newInstance() {
         PlaceholderFragment3 fragment = new PlaceholderFragment3();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
         return fragment;
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        context = getActivity();
         mWeatherInfo = new WeatherInfo();
-        adapter = new WeeklyWeatherAdpater(getActivity(), mWeatherInfo.daily);
+        adapter = new WeeklyWeatherAdpater(context, mWeatherInfo.daily);
+
         /* Get the location and load a weather info on success */
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(getActivity(), location-> {
-                        if (location != null){
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                            getWeather(latitude,longitude);
-                        }
-                        else Log.d("location", "NULL");
-                    });
-        }
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), location-> {
+                    if (location != null){
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        getWeather(latitude,longitude);
+                    }
+                    else Toast.makeText(context, "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                });
     }
 
 
@@ -95,10 +92,10 @@ public class PlaceholderFragment3 extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_main3, container, false);
+        View root = inflater.inflate(R.layout.fragment_main3, container, false);
 
         RecyclerView recyclerView = root.findViewById(R.id.weekly);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
 
         mainField = root.findViewById(R.id.main);
@@ -127,12 +124,13 @@ public class PlaceholderFragment3 extends Fragment {
 
     /* Update MWEATHERINFO*/
     private void getWeather(double latitude, double longitude){
-        String weather_key = getActivity().getResources().getString(R.string.weather_key);
+        String weather_key = context.getResources().getString(R.string.weather_key);
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(ApiService.BASE_URL)
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<JsonObject> call = apiService.getWeather(latitude, longitude, weather_key, "en", "miniutely");
+        Call<JsonObject> call = apiService.getWeather(
+                latitude, longitude, weather_key, "en", "miniutely");
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
@@ -203,8 +201,6 @@ public class PlaceholderFragment3 extends Fragment {
                         mWeatherInfo.addDaily(w);
                     }
                     mWeatherInfo.daily.remove(7);
-
-                    mWeatherInfo.logAll();
                     /* Plot data */
                     ArrayList<Entry> entries = new ArrayList<>();
                     boolean enable = false;
