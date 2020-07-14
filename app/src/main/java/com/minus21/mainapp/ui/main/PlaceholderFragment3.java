@@ -51,7 +51,6 @@ public class PlaceholderFragment3 extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         /* Get the location and load a weather info on success */
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -62,11 +61,10 @@ public class PlaceholderFragment3 extends Fragment {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
                             getWeather(latitude,longitude);
-                            Log.d("location",String.valueOf(latitude)+" "+String.valueOf(longitude));
                         }
                         else Log.d("location", "NULL");
-                });
-            }
+                    });
+        }
     }
 
 
@@ -85,7 +83,6 @@ public class PlaceholderFragment3 extends Fragment {
     /* Interface for retrofit request */
     private interface ApiService {
         String BASE_URL = "https://api.openweathermap.org/data/2.5/";
-        String serviceKey = "4472d4285a54ef872a0f4b46dbaa5ffa";         // API key from openweathermap.org
         @GET("onecall")
         Call<JsonObject> getWeather ( @Query("lat") double lat,
                                       @Query("lon") double lon,
@@ -97,11 +94,12 @@ public class PlaceholderFragment3 extends Fragment {
 
     /* Update MWEATHERINFO*/
     private void getWeather(double latitude, double longitude){
+        String weather_key = getActivity().getResources().getString(R.string.weather_key);
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(ApiService.BASE_URL)
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<JsonObject> call = apiService.getWeather(latitude, longitude, ApiService.serviceKey, "en", "miniutely");
+        Call<JsonObject> call = apiService.getWeather(latitude, longitude, weather_key, "en", "miniutely");
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
