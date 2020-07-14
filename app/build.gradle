@@ -1,10 +1,17 @@
 apply plugin: 'com.android.application'
+
 android {
     // for glide
     repositories {
         google()
         jcenter()
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
     defaultConfig {

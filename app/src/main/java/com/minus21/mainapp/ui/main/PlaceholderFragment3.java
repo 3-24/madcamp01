@@ -2,12 +2,12 @@ package com.minus21.mainapp.ui.main;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,9 +30,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class PlaceholderFragment3 extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
@@ -40,6 +37,8 @@ public class PlaceholderFragment3 extends Fragment {
     private double latitude = 0, longitude = 0;
     private WeatherInfo mWeatherInfo = null;
     private View root;
+    TextView mainField = null;
+    TextView temperatureField = null;
 
     public static PlaceholderFragment3 newInstance(int index) {
         PlaceholderFragment3 fragment = new PlaceholderFragment3();
@@ -53,36 +52,40 @@ public class PlaceholderFragment3 extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /* Get location */
+        /* Get the location and load a weather info on success */
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                        getWeather(latitude,longitude);
-                    }
-                    Log.d("location",String.valueOf(latitude)+" "+String.valueOf(longitude));
-                }
-            });
-        }
+                    .addOnSuccessListener(getActivity(), location-> {
+                        if (location != null){
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            getWeather(latitude,longitude);
+                            Log.d("location",String.valueOf(latitude)+" "+String.valueOf(longitude));
+                        }
+                        else Log.d("location", "NULL");
+                });
+            }
     }
+
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_main3, container, false);
+
+        mainField = root.findViewById(R.id.main);
+        temperatureField = root.findViewById(R.id.temp);
+
         return root;
     }
 
+    /* Interface for retrofit request */
     private interface ApiService {
         String BASE_URL = "https://api.openweathermap.org/data/2.5/";
-        String serviceKey = "SECRET";
+        String serviceKey = "";         // API key from openweathermap.org
         @GET("weather")
         Call<JsonObject> getWeather ( @Query("lat") double lat,
                                       @Query("lon") double lon,
@@ -91,8 +94,8 @@ public class PlaceholderFragment3 extends Fragment {
         );
     }
 
+    /* Update MWEATHERINFO*/
     private void getWeather(double latitude, double longitude){
-        if(latitude == 0 && longitude == 0) return;
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(ApiService.BASE_URL)
                 .build();
@@ -113,6 +116,7 @@ public class PlaceholderFragment3 extends Fragment {
                             main.get("temp").getAsInt(),
                             main.get("feels_like").getAsInt()
                             );
+                    renderWeather();
                     mWeatherInfo.printAll();
                 }
                 else{
@@ -125,5 +129,11 @@ public class PlaceholderFragment3 extends Fragment {
                 Log.d("weather",t.toString());
             }
         });
+    }
+
+
+    private void renderWeather(){
+        mainField.setText(mWeatherInfo.getMain());
+        temperatureField.setText(String.format("%d℃",mWeatherInfo.getTemp()));
     }
 }

@@ -20,6 +20,14 @@ public class WeatherInfo {
         Log.d("weather", main);
     }
 
+    public String getMain() {
+        return main;
+    }
+
+    public int getTemp() {
+        return temp-273;
+    }
+
     public void printAll(){
         Log.d("WeatherInfo", icon);
         Log.d("WeatherInfo", description);
