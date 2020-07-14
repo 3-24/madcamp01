@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.minus21.mainapp.R;
 
@@ -41,12 +42,9 @@ public class PlaceholderFragment1 extends Fragment {
     private CustomAdapter adapter;
     private LinearLayoutManager layoutManager;
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
-    public static PlaceholderFragment1 newInstance(int index) {
+    public static PlaceholderFragment1 newInstance() {
         PlaceholderFragment1 fragment = new PlaceholderFragment1();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -73,12 +71,27 @@ public class PlaceholderFragment1 extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         updateData();
+
+        final SwipeRefreshLayout pullToRefresh = root.findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        updateData();
+                    }
+                }
+                ).start();
+                //updateData();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         editSearch = (EditText) root.findViewById(R.id.editSearch);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -154,9 +167,7 @@ public class PlaceholderFragment1 extends Fragment {
                 );
                 phoneCursor.moveToNext();
                 String realnumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                String phone = realnumber.substring(0,3) +
-                        realnumber.substring(4,8) +
-                        realnumber.substring(9,13);
+                String phone = realnumber.replace("-","");
                 phoneCursor.close();
 
                 // email
@@ -166,9 +177,7 @@ public class PlaceholderFragment1 extends Fragment {
                         ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId,null,null
                 );
                 emailCursor.moveToNext();
-                Log.d("value",String.valueOf(ContactsContract.CommonDataKinds.Email.CONTENT_URI));
                 String email = emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-                Log.d("email",email);
                 emailCursor.close();
 
 
