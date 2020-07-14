@@ -22,6 +22,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.minus21.mainapp.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,6 +42,12 @@ public class PlaceholderFragment3 extends Fragment {
     private View root;
     TextView mainField = null;
     TextView temperatureField = null;
+    TextView descriptionField = null;
+    TextView sunriseField = null;
+    TextView sunsetField = null;
+    TextView currentWindField = null;
+    TextView currentCloudField = null;
+    TextView currentHumidityField = null;
 
     public static PlaceholderFragment3 newInstance(int index) {
         PlaceholderFragment3 fragment = new PlaceholderFragment3();
@@ -76,7 +85,12 @@ public class PlaceholderFragment3 extends Fragment {
 
         mainField = root.findViewById(R.id.main);
         temperatureField = root.findViewById(R.id.temp);
-
+        descriptionField = root.findViewById(R.id.desc);
+        sunriseField = root.findViewById(R.id.sunrise);
+        sunsetField = root.findViewById(R.id.sunset);
+        currentCloudField = root.findViewById(R.id.cloud_value);
+        currentWindField = root.findViewById(R.id.wind_value);
+        currentHumidityField = root.findViewById(R.id.humidity_value);
         return root;
     }
 
@@ -107,13 +121,12 @@ public class PlaceholderFragment3 extends Fragment {
                     JsonObject object = response.body();
                     JsonObject current = (JsonObject) object.get("current");
                     JsonObject current_weather = (JsonObject)((JsonArray) current.get("weather")).get(0);
-
                     mWeatherInfo = new WeatherInfo();
-                    mWeatherInfo.timezone_offset = object.get("timezone_offset").getAsInt();
+                    mWeatherInfo.timezone_offset = object.get("timezone_offset").getAsLong();
                     mWeatherInfo.setCurrentWeather(
-                            current.get("dt").getAsInt(),
-                            current.get("sunrise").getAsInt(),
-                            current.get("sunset").getAsInt(),
+                            current.get("dt").getAsLong(),
+                            current.get("sunrise").getAsLong(),
+                            current.get("sunset").getAsLong(),
                             current.get("temp").getAsDouble(),
                             current.get("feels_like").getAsDouble(),
                             current.get("humidity").getAsInt(),
@@ -133,7 +146,7 @@ public class PlaceholderFragment3 extends Fragment {
                         JsonObject hourObj_weather = (JsonObject)((JsonArray) hourObj.get("weather")).get(0);
                         Weather w = new Weather();
                         w.setWeather(
-                                hourObj.get("dt").getAsInt(),
+                                hourObj.get("dt").getAsLong(),
                                 0,0,
                                 hourObj.get("temp").getAsDouble(),
                                 hourObj.get("feels_like").getAsDouble(),
@@ -154,9 +167,9 @@ public class PlaceholderFragment3 extends Fragment {
                         JsonObject dayObj_weather = (JsonObject)((JsonArray) dayObj.get("weather")).get(0);
                         Weather w = new Weather();
                         w.setWeather(
-                            dayObj.get("dt").getAsInt(),
-                            dayObj.get("sunrise").getAsInt(),
-                            dayObj.get("sunset").getAsInt(),
+                            dayObj.get("dt").getAsLong(),
+                            dayObj.get("sunrise").getAsLong(),
+                            dayObj.get("sunset").getAsLong(),
                             0,0,
                             dayObj.get("humidity").getAsInt(),
                             dayObj.get("clouds").getAsInt(),
@@ -175,20 +188,33 @@ public class PlaceholderFragment3 extends Fragment {
                     renderWeather();
                 }
                 else{
-//                    Log.d("weather", response.body().toString());
+                    Log.d("weather", response.body().toString());
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t){
-//                Log.d("weather",t.toString());
+                Log.d("weather",t.toString());
             }
         });
     }
 
 
     private void renderWeather(){
-        //mainField.setText(mWeatherInfo.getMain());
-        //temperatureField.setText(String.format("%d℃",mWeatherInfo.getTemp()));
+        mainField.setText(mWeatherInfo.current.main);
+        temperatureField.setText(String.valueOf((int)mWeatherInfo.current.temp - 273) + "℃" );
+        descriptionField.setText("("+mWeatherInfo.current.desc+")");
+        sunriseField.setText(timeFormat(mWeatherInfo.current.sunrise));
+        sunsetField.setText(timeFormat(mWeatherInfo.current.sunset));
+        currentCloudField.setText(String.valueOf(mWeatherInfo.current.cloud)+"%");
+        currentWindField.setText(String.valueOf(mWeatherInfo.current.wind_speed)+"m/s");
+        currentHumidityField.setText(String.valueOf(mWeatherInfo.current.humidity)+"%");
+    }
+
+    public String timeFormat(long timestamp){
+
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        String dateString = formatter.format(new Date(timestamp*1000));
+        return dateString;
     }
 }

@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class WeatherInfo {
-    public int timezone_offset;
+    public long timezone_offset;
     public Weather current;
     public ArrayList<Weather> hourly;
     public ArrayList<Weather> daily;
@@ -17,7 +17,7 @@ public class WeatherInfo {
         this.daily = new ArrayList<>();
     }
 
-    public void setCurrentWeather(int dt, int sunrise, int sunset,
+    public void setCurrentWeather(long dt, long sunrise, long sunset,
                                   double temp, double feels_like, int humidity,
                                   int cloud, double wind_speed,
                                   int id, String main, String desc, String icon) {
@@ -34,7 +34,7 @@ public class WeatherInfo {
     }
 
     public void logAll(){
-//        Log.d("weather", String.valueOf(timezone_offset));
+        Log.d("weather", String.valueOf(timezone_offset));
         this.current.logAll();
         for (Weather w: hourly){
             w.logAll();
