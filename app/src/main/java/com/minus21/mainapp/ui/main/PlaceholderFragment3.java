@@ -250,7 +250,6 @@ public class PlaceholderFragment3 extends Fragment {
         currentCloudField.setText(String.valueOf(mWeatherInfo.current.cloud)+"%");
         currentWindField.setText(String.valueOf(mWeatherInfo.current.wind_speed)+"m/s");
         currentHumidityField.setText(String.valueOf(mWeatherInfo.current.humidity)+"%");
-
         lineChart.setData(data);
         lineChart.notifyDataSetChanged();
         lineChart.invalidate();
@@ -268,5 +267,4 @@ public class PlaceholderFragment3 extends Fragment {
         String hourString = formatter.format(new Date(timestamp*1000));
         return Integer.parseInt(hourString);
     }
-
 }
