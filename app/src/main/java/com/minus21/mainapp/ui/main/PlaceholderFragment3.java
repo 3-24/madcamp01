@@ -62,9 +62,9 @@ public class PlaceholderFragment3 extends Fragment {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
                             getWeather(latitude,longitude);
-                            Log.d("location",String.valueOf(latitude)+" "+String.valueOf(longitude));
+//                            Log.d("location",String.valueOf(latitude)+" "+String.valueOf(longitude));
                         }
-                        else Log.d("location", "NULL");
+//                        else Log.d("location", "NULL");
                 });
             }
     }
@@ -85,7 +85,7 @@ public class PlaceholderFragment3 extends Fragment {
     /* Interface for retrofit request */
     private interface ApiService {
         String BASE_URL = "https://api.openweathermap.org/data/2.5/";
-        String serviceKey = "4472d4285a54ef872a0f4b46dbaa5ffa";         // API key from openweathermap.org
+        String serviceKey = "";         // API key from openweathermap.org
         @GET("onecall")
         Call<JsonObject> getWeather ( @Query("lat") double lat,
                                       @Query("lon") double lon,
@@ -177,13 +177,13 @@ public class PlaceholderFragment3 extends Fragment {
                     renderWeather();
                 }
                 else{
-                    Log.d("weather", response.body().toString());
+//                    Log.d("weather", response.body().toString());
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t){
-                Log.d("weather",t.toString());
+//                Log.d("weather",t.toString());
             }
         });
     }

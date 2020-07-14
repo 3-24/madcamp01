@@ -34,7 +34,7 @@ public class WeatherInfo {
     }
 
     public void logAll(){
-        Log.d("weather", String.valueOf(timezone_offset));
+//        Log.d("weather", String.valueOf(timezone_offset));
         this.current.logAll();
         for (Weather w: hourly){
             w.logAll();

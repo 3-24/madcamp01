@@ -41,20 +41,20 @@ public class Weather {
     }
 
     public void logAll(){
-        Log.d("weather",
-                String.valueOf(this.dt)+" "+
-                        String.valueOf(this.sunrise)+" "+
-                        String.valueOf(this.sunset)+" "+
-                        String.valueOf(this.temp)+" "+
-                        String.valueOf(this.feels_like)+" "+
-                        String.valueOf(this.humidity)+" "+
-                        String.valueOf(this.cloud)+" "+
-                        String.valueOf(this.wind_speed)+" "+
-                        String.valueOf(this.id)+" "+
-                        this.main+" "+
-                        this.desc+" "+
-                        this.icon+" "+
-                        String.valueOf(this.temp_max)+" "+
-                        String.valueOf(this.temp_min));
+//        Log.d("weather",
+//                String.valueOf(this.dt)+" "+
+//                        String.valueOf(this.sunrise)+" "+
+//                        String.valueOf(this.sunset)+" "+
+//                        String.valueOf(this.temp)+" "+
+//                        String.valueOf(this.feels_like)+" "+
+//                        String.valueOf(this.humidity)+" "+
+//                        String.valueOf(this.cloud)+" "+
+//                        String.valueOf(this.wind_speed)+" "+
+//                        String.valueOf(this.id)+" "+
+//                        this.main+" "+
+//                        this.desc+" "+
+//                        this.icon+" "+
+//                        String.valueOf(this.temp_max)+" "+
+//                        String.valueOf(this.temp_min));
     }
 }
